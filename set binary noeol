@@ -1,0 +1,84 @@
+[1mdiff --git a/app/controllers/tasks_controller.rb b/app/controllers/tasks_controller.rb[m
+[1mindex 9493d9f..9e3464f 100644[m
+[1m--- a/app/controllers/tasks_controller.rb[m
+[1m+++ b/app/controllers/tasks_controller.rb[m
+[36m@@ -50,6 +50,6 @@[m [mclass TasksController < ApplicationController[m
+   private[m
+   [m
+   def task_params[m
+[31m-    params.require(:task).permit(:content)[m
+[32m+[m[32m    params.require(:task).permit(:content. :status)[m
+   end[m
+ end[m
+\ No newline at end of file[m
+[1mdiff --git a/app/models/task.rb b/app/models/task.rb[m
+[1mindex 3c23424..6f22900 100644[m
+[1m--- a/app/models/task.rb[m
+[1m+++ b/app/models/task.rb[m
+[36m@@ -1,2 +1,4 @@[m
+ class Task < ApplicationRecord[m
+[32m+[m[32m  validates :content, presence: true, length: { maximum: 255 }[m
+[32m+[m[32m  validates :status, presence: true, length: { maximum: 10 }[m
+ end[m
+[1mdiff --git a/app/views/tasks/edit.html.erb b/app/views/tasks/edit.html.erb[m
+[1mindex df30132..1127067 100644[m
+[1m--- a/app/views/tasks/edit.html.erb[m
+[1m+++ b/app/views/tasks/edit.html.erb[m
+[36m@@ -1,10 +1,5 @@[m
+ <h1>id: <%= @task.id %> のタスク編集ページ</h1>[m
+ [m
+[31m-<%= form_with(model: @task, local: true) do |f| %>[m
+[31m-  <%= f.label :content, "タスク" %>[m
+[31m-  <%= f.text_field :content %>[m
+[31m-  [m
+[31m-  <%= f.submit "投稿" %>[m
+[31m-<% end %>[m
+[32m+[m[32m<%= render "form", task :@task %>[m
+ [m
+[31m-<%= link_to "一覧に戻る", task_path %>[m
+\ No newline at end of file[m
+[32m+[m[32m<%= link_to "一覧に戻る", tasks_path %>[m
+\ No newline at end of file[m
+[1mdiff --git a/app/views/tasks/index.html.erb b/app/views/tasks/index.html.erb[m
+[1mindex ad63be0..cc07a22 100644[m
+[1m--- a/app/views/tasks/index.html.erb[m
+[1m+++ b/app/views/tasks/index.html.erb[m
+[36m@@ -2,7 +2,7 @@[m
+ [m
+ <ul>[m
+   <% @tasks.each do |task| %>[m
+[31m-    <li><%= link_to task.id, task %> : <%= task.content %></li>[m
+[32m+[m[32m    <li><%= link_to task.id, task %> : <%= task.status %> &gt; <%= task.content %></li>[m
+   <% end %>[m
+ </ul>[m
+ [m
+[1mdiff --git a/app/views/tasks/new.html.erb b/app/views/tasks/new.html.erb[m
+[1mindex 3f7c647..3ba4bac 100644[m
+[1m--- a/app/views/tasks/new.html.erb[m
+[1m+++ b/app/views/tasks/new.html.erb[m
+[36m@@ -1,10 +1,5 @@[m
+ <h1>タスク新規作成ページ</h1>[m
+ [m
+[31m-<%= form_with(model: @task, local: true) do |f| %>[m
+[31m-  <%= f.label :contet, "タスク" %>[m
+[31m-  <%= f.text_field :content %>[m
+[31m-  [m
+[31m-  <%= f.submit "投稿" %>[m
+[31m-<% end %>[m
+[32m+[m[32m<%= render "form", task: @task %>[m
+ [m
+ <%= link_to "一覧に戻る", tasks_path %>[m
+\ No newline at end of file[m
+[1mdiff --git a/app/views/tasks/show.html.erb b/app/views/tasks/show.html.erb[m
+[1mindex af3274f..9fccfcb 100644[m
+[1m--- a/app/views/tasks/show.html.erb[m
+[1m+++ b/app/views/tasks/show.html.erb[m
+[36m@@ -1,6 +1,7 @@[m
+ <h1>id: <%= @task.id %> の詳細ページ</h1>[m
+ [m
+[31m-<p><%= @task.content %></p>[m
+[32m+[m[32m<p>ステータス: <%= @task.status %></p>[m
+[32m+[m[32m<p>タスク: <%= @task.content %></p>[m
+ [m
+ <%= link_to "一覧に戻る", tasks_path %>[m
+ <%= link_to "このタスクを編集する", edit_task_path(@task) %>[m
