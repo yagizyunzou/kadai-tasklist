@@ -1,5 +1,5 @@
 <ul class="list-unstyled">
-  <% @task.each do |task| %>
+  <% tasks.each do |task| %>
     <li class="media mb-3">
       <div class="media-body">
         <div>
@@ -8,13 +8,8 @@
         <div>
           <p><%= task.content %></p>
         </div>
-        <div>
-          <% if current_user == task.user %>
-            <%= link_to "Delete", task, method: :delete, data: { confirm: "You sure?" }, class: 'btn btn-danger btn-sm' %>
-          <% end %>
-        </div>
       </div>
     </li>
   <% end %>
-  <%= paginate @task %>
+  <%= paginate tasks %>
 </ul>
